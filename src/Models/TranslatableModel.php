@@ -1,11 +1,15 @@
 <?php
 
+namespace SkelaG\LaravelTranslatableModel\Models;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use SkelaG\LaravelTranslatableModel\Classes\Translation;
 
 class TranslatableModel extends Model
 {
     protected $translationsModelName = null;
+    protected $casts = [];
 
     protected static function boot()
     {
@@ -14,6 +18,15 @@ class TranslatableModel extends Model
         static::addGlobalScope('translation', function ($builder) {
             return $builder->whereHas('translation')->with('translation');
         });
+    }
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $translatable_fields = $this->getTranslatable();
+        foreach ($translatable_fields as $field) {
+            $this->casts[$field] = Translation::class;
+        }
     }
 
     public function scopeSlug($query, $slug)
