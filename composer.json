@@ -1,0 +1,16 @@
+{
+    "name": "skelag/laravel-translatable-model",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Skelag\\LaravelTranslatableModel\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alex Gonoboblev",
+            "email": "cugfug576@gmail.com"
+        }
+    ],
+    "require": {}
+}
