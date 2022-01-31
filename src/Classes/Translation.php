@@ -19,6 +19,5 @@ class Translation implements \Illuminate\Contracts\Database\Eloquent\CastsAttrib
     public function set($model, string $key, $value, array $attributes)
     {
         $model->translation->{$key} = $value;
-        $model->translation->save();
     }
 }

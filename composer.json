@@ -1,16 +1,23 @@
 {
-    "name": "skelag/laravel-translatable-model",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Skelag\\LaravelTranslatableModel\\": "src/"
-        }
+  "name": "skelag/laravel-translatable-model",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Skelag\\LaravelTranslatableModel\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Alex Gonoboblev",
+      "email": "cugfug576@gmail.com"
     },
-    "authors": [
-        {
-            "name": "Alex Gonoboblev",
-            "email": "cugfug576@gmail.com"
-        }
-    ],
-    "require": {}
+    {
+      "name": "chfur",
+      "homepage": "https://github.com/CHfur"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "laravel/framework": ">=7.0"
+  }
 }

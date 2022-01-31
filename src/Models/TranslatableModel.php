@@ -18,13 +18,16 @@ class TranslatableModel extends Model
         static::addGlobalScope('translation', function ($builder) {
             return $builder->whereHas('translation')->with('translation');
         });
+
+        static::updated(function (TranslatableModel $model) {
+            $model->translation->save();
+        });
     }
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $translatable_fields = $this->getTranslatable();
-        foreach ($translatable_fields as $field) {
+        foreach ($this->getTranslatable() as $field) {
             $this->casts[$field] = Translation::class;
         }
     }
@@ -99,7 +102,7 @@ class TranslatableModel extends Model
 
     public function locale($locale)
     {
-        return $this->withoutRelations('translation')->hasOne($this->getTranslationsModelName())->whereLocale($locale);
+        return $this->withoutRelation('translation')->hasOne($this->getTranslationsModelName())->whereLocale($locale);
     }
 
     public function ru()
@@ -110,5 +113,14 @@ class TranslatableModel extends Model
     public function en()
     {
         return $this->locale('en');
+    }
+
+    public function save(array $options = [])
+    {
+        foreach ($this->getTranslatable() as $field) {
+            unset($this->{$field});
+        }
+
+        parent::save($options);
     }
 }
