@@ -8,8 +8,9 @@ use SkelaG\LaravelTranslatableModel\Classes\Translation;
 
 class TranslatableModel extends Model
 {
-    protected $translationsModelName = null;
+    protected ?string $translationsModelName = null;
     protected $casts = [];
+    protected array $translation_attributes = [];
 
     protected static function boot()
     {
@@ -26,10 +27,13 @@ class TranslatableModel extends Model
 
     public function __construct(array $attributes = [])
     {
-        parent::__construct($attributes);
         foreach ($this->getTranslatable() as $field) {
+            if (isset($attributes[$field])) {
+                $this->translation_attributes[$field] = $attributes[$field];
+            }
             $this->casts[$field] = Translation::class;
         }
+        parent::__construct($attributes);
     }
 
     public function scopeSlug($query, $slug)
@@ -105,20 +109,17 @@ class TranslatableModel extends Model
         return $this->withoutRelation('translation')->hasOne($this->getTranslationsModelName())->whereLocale($locale);
     }
 
-    public function ru()
-    {
-        return $this->locale('ru');
-    }
-
-    public function en()
-    {
-        return $this->locale('en');
-    }
-
     public function save(array $options = [])
     {
+        $this->translation_attributes['locale'] = App::getLocale();
+
         $this->syncOriginal();
         parent::save($options);
+
+        if (!$this->translation) {
+            $this->translation()->create($this->translation_attributes);
+        }
+        $this->refresh();
     }
 
     public function update(array $attributes = [], array $options = [])
