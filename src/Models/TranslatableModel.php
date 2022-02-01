@@ -117,10 +117,13 @@ class TranslatableModel extends Model
 
     public function save(array $options = [])
     {
-        foreach ($this->getTranslatable() as $field) {
-            unset($this->{$field});
-        }
-
+        $this->syncOriginal();
         parent::save($options);
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        $this->translation->update($attributes, $options);
+        return parent::update($attributes, $options);
     }
 }
