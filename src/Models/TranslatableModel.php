@@ -3,6 +3,7 @@
 namespace SkelaG\LaravelTranslatableModel\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\App;
 use SkelaG\LaravelTranslatableModel\Classes\Translation;
 
@@ -16,13 +17,14 @@ class TranslatableModel extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('translation', function ($builder) {
-            return $builder->whereHas('translation')->with('translation');
-        });
-
         static::updated(function (TranslatableModel $model) {
             $model->translation->save();
         });
+    }
+
+    public function scopeOnlyWithTranslations(Builder $builder)
+    {
+        return $builder->whereHas('translation');
     }
 
     public function __construct(array $attributes = [])
@@ -118,12 +120,17 @@ class TranslatableModel extends Model
 
         if (!$this->translation) {
             $this->translation()->create($this->translation_attributes);
+            $this->refresh();
         }
-        $this->refresh();
     }
 
     public function update(array $attributes = [], array $options = [])
     {
+        if (!$this->translation) {
+            $attributes['locale'] = App::getLocale();
+            $this->translation()->create($attributes);
+            $this->refresh();
+        }
         $this->translation->update($attributes, $options);
         return parent::update($attributes, $options);
     }

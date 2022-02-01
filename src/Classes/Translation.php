@@ -10,7 +10,7 @@ class Translation implements \Illuminate\Contracts\Database\Eloquent\CastsAttrib
      */
     public function get($model, string $key, $value, array $attributes)
     {
-        return $model->translation->{$key};
+        return $model->translation ? $model->translation->{$key} : null;
     }
 
     /**
