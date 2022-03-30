@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TranslationModel extends Model
 {
-    public function getTranslatableFields()
+    protected array $translatable = [];
+
+    public function getTranslatableFields(): array
     {
-        return $this->fillable;
+        return $this->translatable;
     }
 }
