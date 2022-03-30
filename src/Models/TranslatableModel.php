@@ -50,6 +50,11 @@ class TranslatableModel extends Model
         return array_diff($this->fillable, $this->getTranslatable());
     }
 
+    public function addTranslationField($column, $value)
+    {
+        $this->translation_attributes[$column] = $value;
+    }
+
     public function getTranslatable()
     {
         $translationModelName = $this->getTranslationsModelName();
@@ -125,13 +130,20 @@ class TranslatableModel extends Model
     {
         $this->translation_attributes['locale'] = App::getLocale();
 
-        $this->syncOriginal();
+        $original_attributes = $this->getOriginal();
+        foreach ($this->attributes as $key => $attribute) {
+            if (!isset($original_attributes[$key])) {
+                unset($this->attributes[$key]);
+            }
+        }
         parent::save($options);
 
         if (!$this->translation) {
             $this->translation()->create($this->translation_attributes);
-            $this->refresh();
+        } else {
+            $this->translation()->update($this->translation_attributes);
         }
+        $this->refresh();
     }
 
     public function update(array $attributes = [], array $options = [])
