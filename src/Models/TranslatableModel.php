@@ -122,6 +122,7 @@ class TranslatableModel extends Model
         foreach ($this->getTranslatable() as $field) {
             if (isset($attributes[$field])) {
                 $this->translation_attributes[$field] = $attributes[$field];
+                unset($attributes[$field]);
             }
         }
         return parent::fill($attributes);
