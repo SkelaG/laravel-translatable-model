@@ -2,6 +2,7 @@
 
 namespace SkelaG\LaravelTranslatableModel\Builders;
 
+use Arr;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class TranslatableQueryBuilder extends \Illuminate\Database\Eloquent\Builder
@@ -20,7 +21,7 @@ class TranslatableQueryBuilder extends \Illuminate\Database\Eloquent\Builder
             return $this->whereHas('translation', function ($query) use ($column, $operator, $value, $boolean) {
                 $query->where($column, $operator, $value, $boolean);
             });
-        } elseif (is_array($column)) {
+        } elseif (is_array($column) && Arr::isAssoc($column)) {
             foreach ($column as  $key => $value) {
                 if (in_array($key, $this->translatable)) {
                     $this->whereHas('translation', function ($query) use ($key, $value) {
