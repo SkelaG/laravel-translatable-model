@@ -156,11 +156,9 @@ class TranslatableModel extends Model
 
     private function syncAttributes()
     {
-        $original_attributes = $this->getOriginal();
-        foreach ($this->attributes as $key => $attribute) {
-            if (!isset($original_attributes[$key])) {
-                unset($this->attributes[$key]);
-            }
+        foreach ($this->translation_attributes as $key => $value) {
+            unset($this->attributes[$key]);
+            unset($this->original[$key]);
         }
     }
 
