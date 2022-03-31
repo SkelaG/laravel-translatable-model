@@ -12,4 +12,12 @@ class TranslationModel extends Model
     {
         return $this->translatable;
     }
+
+    /**
+     * @return array|string[]
+     */
+    public function getFillable()
+    {
+        return array_merge($this->translatable, ['locale']);
+    }
 }
