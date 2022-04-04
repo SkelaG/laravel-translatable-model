@@ -13,6 +13,7 @@ class TranslatableModel extends Model
     protected ?string $translationsModelName = null;
     protected $casts = [];
     protected array $translation_attributes = [];
+    protected ?string $locale = null;
 
     protected static function boot()
     {
@@ -92,7 +93,7 @@ class TranslatableModel extends Model
 
     public function translation()
     {
-        return $this->hasOne($this->getTranslationsModelName())->where('locale', App::getLocale());
+        return $this->hasOne($this->getTranslationsModelName())->where('locale', $this->getLocale());
     }
 
     public function translations()
@@ -130,7 +131,7 @@ class TranslatableModel extends Model
 
     public function save(array $options = [])
     {
-        $this->translation_attributes['locale'] = App::getLocale();
+        $this->translation_attributes['locale'] = $this->getLocale();
 
         $this->syncAttributes();
         parent::save($options);
@@ -165,5 +166,19 @@ class TranslatableModel extends Model
     public function newEloquentBuilder($query): TranslatableQueryBuilder
     {
         return new TranslatableQueryBuilder($query, $this->getTranslatable());
+    }
+
+    public function setLocale(string $locale)
+    {
+        $this->locale = $locale;
+        return $this;
+    }
+
+    protected function getLocale(): string
+    {
+        if ($this->locale) {
+            return $this->locale;
+        }
+        return App::getLocale();
     }
 }
