@@ -24,7 +24,7 @@ class TranslatableModel extends Model
         });
     }
 
-    public function scopeOnlyWithTranslations(Builder $builder)
+    public function scopeOnlyWithTranslations(TranslatableQueryBuilder $builder)
     {
         return $builder->whereHas('translation');
     }
