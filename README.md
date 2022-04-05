@@ -24,39 +24,14 @@ class CreateBooksTable extends Migration
 
             $table->timestamps();
         });
+        
+        $this->translates('books', ['author' => 'string', 'name' => 'string']);
     }
 
     public function down()
     {
+        $this->dropTranslates('books');
         Schema::dropIfExists('books');
-    }
-}
-```
-И таблицу с переводами:
-```php
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-class CreateBookTranslationsTable extends Migration
-{
-    public function up()
-    {
-        Schema::create('book_translations', function (Blueprint $table) {
-            $table->id();
-
-            $table->string('name');
-            $table->string('author');
-            $table->string('locale');
-            $table->foreignIdFor(\App\Models\Book::class);
-
-            $table->timestamps();
-        });
-    }
-
-    public function down()
-    {
-        Schema::dropIfExists('book_translations');
     }
 }
 ```
@@ -79,8 +54,38 @@ use SkelaG\LaravelTranslatableModel\Models\TranslationModel;
 class BookTranslation extends TranslationModel
 {
     protected array $translatable = ['name', 'author'];
-    protected $fillable = ['name', 'author', 'locale'];
 }
 ```
 ## Использование моделей
 ### Создание
+```php
+App::setLocale('ru');
+$book = \App\Models\Book::create([
+    'written_at' => \Carbon\Carbon::parse('1833-01-01'),
+    'author' => 'Александр Сергеевич Пушкин',
+    'name' => 'Евгений Онегин'
+]);
+```
+Или:
+```php
+App::setLocale('ru');
+$book = new \App\Models\Book();
+$book->author = 'Александр Сергеевич Пушкин';
+$book->name = 'Евгений Онегин';
+$book->save();
+```
+### Добавление переводов
+Необходимо установить нужную локаль и выполнить обновление модели
+```php
+App::setLocale('en');
+$book = \App\Models\Book::first();
+$book->update(['author' => 'Alexander Sergeyevich Pushkin', 'name' => 'Eugene Onegin']);
+```
+или
+```php
+App::setLocale('en');
+$book = \App\Models\Book::first();
+$book->author = 'Alexander Sergeyevich Pushkin';
+$book->name = 'Eugene Onegin';
+```
+Обновление значений в переводах происходит так же
