@@ -9,9 +9,9 @@ class TranslatableMigration extends \Illuminate\Database\Migrations\Migration
 {
     public function translates($main_table, $columns)
     {
-        Schema::create(mb_substr($main_table, 0, -1).'_translations',
+        Schema::create(\Str::singular($main_table).'_translations',
             function (Blueprint $table) use ($columns, $main_table) {
-                $foreign = mb_substr($main_table, 0, -1).'_id';
+                $foreign = \Str::singular($main_table).'_id';
                 $table->id();
                 $table->unsignedBigInteger($foreign)->index();
                 $table->foreign($foreign)->references('id')->on($main_table)->onDelete('cascade');
@@ -25,6 +25,6 @@ class TranslatableMigration extends \Illuminate\Database\Migrations\Migration
 
     public function dropTranslates($table)
     {
-        Schema::dropIfExists(mb_substr($table, 0, -1).'_translations');
+        Schema::dropIfExists(\Str::singular($table).'_translations');
     }
 }
