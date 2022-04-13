@@ -18,10 +18,6 @@ class TranslatableModel extends Model
     protected static function boot()
     {
         parent::boot();
-
-        static::updated(function (TranslatableModel $model) {
-            $model->translation->save();
-        });
     }
 
     public function scopeOnlyWithTranslations(TranslatableQueryBuilder $builder)
