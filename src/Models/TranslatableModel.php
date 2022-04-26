@@ -3,7 +3,6 @@
 namespace SkelaG\LaravelTranslatableModel\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\App;
 use SkelaG\LaravelTranslatableModel\Builders\TranslatableQueryBuilder;
 use SkelaG\LaravelTranslatableModel\Classes\Translation;
@@ -132,11 +131,14 @@ class TranslatableModel extends Model
         $this->syncAttributes();
         parent::save($options);
 
-        if (!$this->translation) {
-            $this->translation()->create($this->translation_attributes);
-        } else {
-            $this->translation()->update($this->translation_attributes);
+        if ($this->translation_attributes) {
+            if (!$this->translation) {
+                $this->translation()->create($this->translation_attributes);
+            } else {
+                $this->translation()->update($this->translation_attributes);
+            }
         }
+
         $this->refresh();
     }
 
@@ -167,6 +169,7 @@ class TranslatableModel extends Model
     public function setLocale(string $locale)
     {
         $this->locale = $locale;
+        $this->load('translation');
         return $this;
     }
 

@@ -14,9 +14,9 @@ class TranslationModel extends Model
     }
 
     /**
-     * @return array|string[]
+     * @return array
      */
-    public function getFillable()
+    public function getFillable(): array
     {
         return array_merge($this->translatable, ['locale']);
     }
