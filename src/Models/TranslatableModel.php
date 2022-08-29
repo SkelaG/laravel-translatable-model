@@ -110,7 +110,7 @@ class TranslatableModel extends Model
 
     public function locale($locale)
     {
-        return $this->withoutRelation('translation')->hasOne($this->getTranslationsModelName())->whereLocale($locale);
+        return $this->hasOne($this->getTranslationsModelName())->whereLocale($locale);
     }
 
     public function fill(array $attributes)
