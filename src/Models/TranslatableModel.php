@@ -172,6 +172,16 @@ class TranslatableModel extends Model
         $this->load('translation');
         return $this;
     }
+    
+    public function getTranslationsArray(): array
+    {
+        $ans = [];
+        foreach ($this->translations as $locale => $translation) {
+            $ans[$locale] = $translation->toArray();
+        }
+        
+        return $ans;
+    }
 
     protected function getLocale(): string
     {
