@@ -123,6 +123,11 @@ class TranslatableModel extends Model
         }
         return parent::fill($attributes);
     }
+    
+    public function hasTranslation(?string $locale = null): bool
+    {
+        return (bool) $this->locale($locale);
+    }
 
     public function save(array $options = [])
     {
