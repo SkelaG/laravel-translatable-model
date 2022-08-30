@@ -181,8 +181,8 @@ class TranslatableModel extends Model
     public function getTranslationsArray(): array
     {
         $ans = [];
-        foreach ($this->translations as $locale => $translation) {
-            $ans[$locale] = $translation->toArray();
+        foreach ($this->translations()->get() as $translation) {
+            $ans[$translation->locale] = $translation->toArray();
         }
         
         return $ans;
